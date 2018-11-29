@@ -7,7 +7,8 @@ module Hana
     include Enumerable
 
     def initialize path
-      @path = Pointer.parse path
+      @path = path
+      @path = Pointer.parse(path) unless @path.is_a?(Array)
     end
 
     def each(&block); @path.each(&block); end
@@ -90,7 +91,8 @@ module Hana
     OP    = 'op' # :nodoc:
 
     def add ins, doc
-      list = Pointer.parse ins[PATH]
+      list = ins[PATH]
+      list = Pointer.parse(list) unless list.is_a?(Array)
       key  = list.pop
       dest = Pointer.eval list, doc
       obj  = ins.fetch VALUE
@@ -110,8 +112,12 @@ module Hana
     end
 
     def move ins, doc
-      from     = Pointer.parse ins.fetch FROM
-      to       = Pointer.parse ins[PATH]
+      from = ins.fetch(FROM)
+      from = Pointer.parse(from) unless from.is_a?(Array)
+
+      to = ins[PATH]
+      to = Pointer.parse(to) unless to.is_a?(Array)
+
       from_key = from.pop
       key      = to.pop
       src      = Pointer.eval from, doc
@@ -123,8 +129,12 @@ module Hana
     end
 
     def copy ins, doc
-      from     = Pointer.parse ins.fetch FROM
-      to       = Pointer.parse ins[PATH]
+      from = ins.fetch(FROM)
+      from = Pointer.parse(from) unless from.is_a?(Array)
+
+      to = ins[PATH]
+      to = Pointer.parse(to) unless to.is_a?(Array)
+
       from_key = from.pop
       key      = to.pop
       src      = Pointer.eval from, doc
@@ -151,7 +161,8 @@ module Hana
     end
 
     def replace ins, doc
-      list = Pointer.parse ins[PATH]
+      list = ins[PATH]
+      list = Pointer.parse(list) unless list.is_a?(Array)
       key  = list.pop
       obj  = Pointer.eval list, doc
 
@@ -168,7 +179,8 @@ module Hana
     end
 
     def remove ins, doc
-      list = Pointer.parse ins[PATH]
+      list = ins[PATH]
+      list = Pointer.parse(list) unless list.is_a?(Array)
       key  = list.pop
       obj  = Pointer.eval list, doc
       rm_op obj, key
